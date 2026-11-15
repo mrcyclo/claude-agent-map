@@ -293,6 +293,13 @@ function toggle($: EngineInterface, key: string, to: boolean): void {
   void update($, open, prev => ({ ...prev, [key]: to }))
 }
 
+// Waits for the redraw the state write triggers, so the new last row exists before scrolling.
+function follow($: EngineInterface): void {
+  $.clock.after(120, () => {
+    void $.ui.scroll({ in: PANE, to: 'end' })
+  })
+}
+
 function setAll($: EngineInterface, keys: string[], to: boolean): void {
   void update($, open, prev => ({ ...prev, ...Object.fromEntries(keys.map(k => [k, to])) }))
 }
@@ -357,6 +364,7 @@ export const register: Register = on => {
     })
     // Dropping every hand toggle folds all older groups back to their default.
     await update($, open, () => ({}))
+    follow($)
     return next(e)
   })
 
@@ -415,6 +423,7 @@ export const register: Register = on => {
       }
       return { ...g, agents: [...g.agents.filter(a => a.id !== id), agent] }
     })
+    follow($)
     return ran
   })
 
@@ -439,6 +448,7 @@ export const register: Register = on => {
       }
       return prune({ ...g, calls: [...g.calls, call] })
     })
+    follow($)
     let after: Described = { ...before, summary: 'Thất bại', sections: before.sections }
     let isError = true
     try {
@@ -702,7 +712,7 @@ export const register: Register = on => {
         </Box>
         {g.turns.length === 0
           ? <Text color="subtle" italic>Chưa có tin nhắn nào kể từ khi mở sơ đồ.</Text>
-          : [...g.turns].reverse().map(turnView)}
+          : g.turns.map(turnView)}
       </Box>
     )
   })
