@@ -1,0 +1,1 @@
+{ "name": "agent-map", "version": "0.1.0", "description": "Sơ đồ realtime: session, lệnh đang chạy, sub agent và model của từng nhánh", "types": "./types/index.d.ts" }

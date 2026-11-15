@@ -1,0 +1,5 @@
+{
+  "name": "claude-agent-map",
+  "owner": { "name": "mrcyclo" },
+  "plugins": [{ "name": "agent-map", "source": "./" }]
+}
